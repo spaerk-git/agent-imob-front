@@ -3,20 +3,11 @@ import { motion } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Bot, User, UserCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { formatTime as formatTimeUtil } from '@/lib/date';
 import ReactMarkdown from 'react-markdown';
 
-const MessageBubble = ({ message, isGrouped = false }) => {
+const MessageBubble = ({ message, isGrouped = false }) => {  
   const isAgent = message.origem === 'agent' || message.origem === 'painel';
-
-  const formatTime = (timestamp) => {
-    if (!timestamp) return '';
-    try {
-        return format(new Date(timestamp), 'HH:mm');
-    } catch(e) {
-        return '';
-    }
-  };
 
   const getSenderIcon = () => {
     if (isAgent) return <UserCheck className="h-4 w-4" />;
@@ -62,7 +53,7 @@ const MessageBubble = ({ message, isGrouped = false }) => {
             <span className={cn("font-medium", getSenderColor())}>
               {message.senderName || 'Desconhecido'}
             </span>
-            <span>{formatTime(message.timestamp)}</span>
+            <span>{formatTimeUtil(message.timestamp)}</span>
           </div>
         )}
 

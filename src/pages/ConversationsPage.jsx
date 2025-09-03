@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ConversationList from '@/components/ConversationList';
 import ChatArea from '@/components/ChatArea';
 import { useConversationMessages } from '@/hooks/useConversations';
+import { useRealtime } from '@/hooks/useRealtime';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Building, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,8 @@ import { Button } from '@/components/ui/button';
 function ConversationsPage() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   
+  useRealtime(selectedConversation?.id);
+
   const { 
     data: messages, 
     isLoading: isLoadingMessages, 

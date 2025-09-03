@@ -4,8 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { formatTimestampRelative } from '@/lib/date';
 
 const ConversationCard = ({ conversation, isSelected, onClick }) => {
   const getStatusColor = (status) => {
@@ -27,17 +26,6 @@ const ConversationCard = ({ conversation, isSelected, onClick }) => {
   };
   
   const statusText = getStatusText(conversation.status);
-
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return '';
-    try {
-        const date = new Date(timestamp.endsWith('Z') ? timestamp : `${timestamp}Z`);
-        return formatDistanceToNow(date, { addSuffix: true, locale: ptBR });
-    } catch (e) {
-        console.error("Error formatting date:", e);
-        return '';
-    }
-  };
 
   return (
     <motion.div
@@ -79,7 +67,7 @@ const ConversationCard = ({ conversation, isSelected, onClick }) => {
             )}
             <span className="flex items-center gap-1 shrink-0">
               <Clock className="h-3 w-3" />
-              {formatTimestamp(conversation.ultima_interacao)}
+              {formatTimestampRelative(conversation.ultima_interacao)}
             </span>
           </div>
         </div>

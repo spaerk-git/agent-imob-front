@@ -7,7 +7,6 @@ import DashboardPage from '@/pages/DashboardPage';
 import UsersPage from '@/pages/UsersPage';
 import LoginPage from '@/pages/LoginPage';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { AuthProvider } from '@/contexts/AuthContext';
 import PlatformUsersPage from '@/pages/PlatformUsersPage';
 import ProfilePage from '@/pages/ProfilePage';
 import UpdatePasswordPage from '@/pages/UpdatePasswordPage';
@@ -20,30 +19,28 @@ function App() {
                 <title>Painel de Atendimento | Agente Imobiliário</title>
                 <meta name="description" content="Painel de gerenciamento de conversas e suporte ao cliente da Agente Imobiliário." />
             </Helmet>
-            <AuthProvider>
-                <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/update-password" element={<UpdatePasswordPage />} />
-                    <Route 
-                        path="/*"
-                        element={
-                            <ProtectedRoute>
-                                <Layout>
-                                    <Routes>
-                                        <Route path="/" element={<ConversationsPage />} />
-                                        <Route path="/dashboard" element={<DashboardPage />} />
-                                        <Route path="/whatsapp-users" element={<UsersPage />} />
-                                        <Route path="/platform-users" element={<PlatformUsersPage />} />
-                                        <Route path="/manage-users" element={<ManageUsersPage />} />
-                                        <Route path="/profile" element={<ProfilePage />} />
-                                        <Route path="*" element={<Navigate to="/" />} />
-                                    </Routes>
-                                </Layout>
-                            </ProtectedRoute>
-                        } 
-                    />
-                </Routes>
-            </AuthProvider>
+            <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/update-password" element={<UpdatePasswordPage />} />
+                <Route 
+                    path="/*"
+                    element={
+                        <ProtectedRoute>
+                            <Layout>
+                                <Routes>
+                                    <Route path="/" element={<ConversationsPage />} />
+                                    <Route path="/dashboard" element={<DashboardPage />} />
+                                    <Route path="/whatsapp-users" element={<UsersPage />} />
+                                    <Route path="/platform-users" element={<PlatformUsersPage />} />
+                                    <Route path="/manage-users" element={<ManageUsersPage />} />
+                                    <Route path="/profile" element={<ProfilePage />} />
+                                    <Route path="*" element={<Navigate to="/" />} />
+                                </Routes>
+                            </Layout>
+                        </ProtectedRoute>
+                    } 
+                />
+            </Routes>
         </>
     );
 }

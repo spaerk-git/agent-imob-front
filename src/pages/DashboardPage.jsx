@@ -5,8 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, BarChart3, Clock, LineChart, MessageSquare, PieChart, Users, XCircle } from 'lucide-react';
 import { useDashboardMetrics } from '@/hooks/useDashboardMetrics';
 import { DonutChart, BarChart, AreaChart } from '@/components/ui/tremor';
-import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { formatChartDate } from '@/lib/date';
 
 const valueFormatter = (number) => `${new Intl.NumberFormat('pt-BR').format(number).toString()}`;
 
@@ -72,7 +71,7 @@ const DashboardPage = () => {
 
     const monthlyChartData = metrics?.comparativo_mensal?.map(item => ({
         ...item,
-        mes: format(parseISO(item.mes), 'MMM/yy', { locale: ptBR }),
+        mes: formatChartDate(item.mes),
     })) || [];
 
     const hourlyChartData = metrics?.jsonb_agg?.map(item => ({

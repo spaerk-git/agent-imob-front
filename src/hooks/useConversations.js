@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiGet, apiPost, apiPatch } from '@/lib/api/supabase';
 import { toast } from '@/components/ui/use-toast';
@@ -32,6 +33,7 @@ export const useConversations = (statusFilter = 'all', searchTerm = '') => {
       const conversations = await apiGet(path);
       return conversations.map(mapConversationData);
     },
+    staleTime: Infinity, // Keep data fresh until invalidated by realtime
   });
 
   const { conversations, counts } = useMemo(() => {

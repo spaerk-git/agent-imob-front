@@ -17,13 +17,7 @@ import { cn } from '@/lib/utils';
 import { useSendMessage, useUpdateConversationStatus } from '@/hooks/useConversations';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiGet, apiGenericPost } from '@/lib/api/supabase';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
-
+import { formatDateHeader as formatDateHeaderUtil } from '@/lib/date';
 
 const ChatArea = ({ conversation, onStatusChange }) => {
   const { user } = useAuth();
@@ -62,37 +56,7 @@ const ChatArea = ({ conversation, onStatusChange }) => {
     fetchOperatorId();
   }, [user]);
 
-  useEffect(() => {
-    if (!conversation?.id) return;
 
-    const channel = supabase
-      .channel(`realtime:mensagens:conversa-${conversation.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'mensagens',
-          filter: `conversa_id=eq.${conversation.id}`,
-        },
-        (payload) => {
-          const novaMensagem = payload.new;
-
-          // Verifica se a mensagem já existe
-          const exists = conversation.messages?.some(msg => msg.id === novaMensagem.id);
-          if (!exists) {
-            conversation.messages.push(novaMensagem); // Atualiza diretamente
-            scrollToBottom(); // Opcional, para manter rolagem
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [conversation?.id]);
-  
   const handleSendMessage = async () => {
     if (!message.trim() || !isAgentPaused || !operatorId) return;
 
@@ -148,17 +112,6 @@ const ChatArea = ({ conversation, onStatusChange }) => {
       groups[date].push(message);
       return groups;
     }, {});
-  };
-  
-  const formatDateHeader = (dateString) => {
-    const date = new Date(dateString);
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    if (date.toDateString() === today.toDateString()) return 'Hoje';
-    if (date.toDateString() === yesterday.toDateString()) return 'Ontem';
-    return date.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   };
 
   const shouldGroupMessage = (currentMessage, previousMessage) => {
@@ -225,7 +178,7 @@ const ChatArea = ({ conversation, onStatusChange }) => {
           {Object.entries(messageGroups).map(([date, messages]) => (
             <div key={date} className="mb-6">
               <div className="flex justify-center mb-4">
-                <div className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground">{formatDateHeader(date)}</div>
+                <div className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground">{formatDateHeaderUtil(messages[0]?.timestamp)}</div>
               </div>
               <div className="space-y-2">
                 {messages.map((msg, index) => (
