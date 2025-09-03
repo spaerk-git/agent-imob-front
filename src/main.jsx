@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useAuth } from '@/contexts/AuthContext';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 
 const AppWrapper = () => {
   const { logout } = useAuth();
@@ -57,7 +57,9 @@ const AppWrapper = () => {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AppWrapper />
+      <AuthProvider>
+        <AppWrapper />
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

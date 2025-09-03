@@ -15,8 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { formatFullDateTime } from '@/lib/date';
 
 const PlatformUsersPage = () => {
     const {
@@ -155,7 +154,7 @@ const PlatformUsersPage = () => {
                                                 <TableCell className="font-medium">{user.nome || 'Não informado'}</TableCell>
                                                 <TableCell>{user.email}</TableCell>
                                                 <TableCell>
-                                                    {format(new Date(user.created_at), "dd 'de' MMMM 'de' yyyy, 'às' HH:mm", { locale: ptBR })}
+                                                    {formatFullDateTime(user.created_at)}
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <DropdownMenu>
